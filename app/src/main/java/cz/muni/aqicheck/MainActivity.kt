@@ -8,7 +8,7 @@ import androidx.navigation.ui.setupWithNavController
 import cz.muni.aqicheck.databinding.ActivityMainBinding
 
 // TODO 1 Konstra UI
-// TODO 2 MainActivity -> layout, binding
+// TODO 2 MainActivity -> layout, binding, bottom navigation
 // TODO 6 Resources
 
 class MainActivity : AppCompatActivity() {
