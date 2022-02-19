@@ -39,7 +39,6 @@ android {
     }
 }
 
-// TODO 7. GRADLE DEPENDECIES
 dependencies {
 
     // CORE UI

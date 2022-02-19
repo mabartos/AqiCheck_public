@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cz.muni.aqicheck">
 
-    <!-- TODO 4. Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -14,7 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AqiCheck">
 
-        <!-- TODO 5. Registrace Activity v Manifest -->
         <activity
             android:name=".MainActivity"
             android:exported="true">

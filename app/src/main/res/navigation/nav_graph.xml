@@ -2,11 +2,14 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/listFragment2">
+    app:startDestination="@id/listFragment">
 
+    <!--    // TODO 6. Navigation Graph -->
     <fragment
-        android:id="@+id/listFragment2"
+        android:id="@+id/listFragment"
         android:name="cz.muni.aqicheck.ui.list.ListFragment"
         tools:layout="@layout/fragment_list"
         android:label="ListFragment" />
+
+    <!--    // TODO 7. (S) Add FavoriteFragment -->
 </navigation>
