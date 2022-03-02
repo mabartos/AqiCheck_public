@@ -6,7 +6,16 @@ import cz.muni.aqicheck.data.AqiPresentableListItem
 class AqiRepository {
 
     fun getMockedData(): List<AqiPresentableListItem> =
-        listOf(
-            // TODO 4.3 (S) Mock data
-        )
+        mutableListOf<AqiPresentableListItem>().apply {
+            repeat(10) {
+                AqiPresentableListItem(
+                    id = it.toLong(),
+                    aqi = "aqi-$it",
+                    time = System.currentTimeMillis().toString(),
+                    station = "Station $it",
+                    isFavorite = it % 2 == 0
+                )
+            }
+        }
+
 }

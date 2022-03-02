@@ -5,13 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import cz.muni.aqicheck.data.AqiPresentableListItem
 import cz.muni.aqicheck.databinding.ItemAiqListBinding
+import cz.muni.aqicheck.repository.AqiRepository
 
 class AqiAdapter(
     private val onItemClick: (AqiPresentableListItem) -> Unit
 ) : RecyclerView.Adapter<AqiViewHolder>() {
 
     // TODO 4. Data obsažená v Adpateru
-    private var listItems: MutableList<AqiPresentableListItem> = mutableListOf()
+    private var listItems: MutableList<AqiPresentableListItem> = AqiRepository().getMockedData().toMutableList()
 
     // TODO 5. Binding Layoutu Viewholderu
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AqiViewHolder {
