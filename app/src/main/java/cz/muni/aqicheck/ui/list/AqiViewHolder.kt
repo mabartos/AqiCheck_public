@@ -9,7 +9,7 @@ class AqiViewHolder(private val binding: ItemAiqListBinding) :
 
     fun bind(listItem: AqiPresentableListItem, onItemClick: (AqiPresentableListItem) -> Unit) {
         binding.aqiColorIndicator
-        binding.aqiValueTextView
+        binding.aqiValueTextView.text
         binding.cityNameTextView
         binding.timeTextView
         binding.favoriteImageView
