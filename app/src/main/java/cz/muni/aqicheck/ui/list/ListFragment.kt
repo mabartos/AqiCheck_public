@@ -15,7 +15,7 @@ class ListFragment : Fragment() {
     private lateinit var binding: FragmentListBinding
 
     private val aqiRepository: AqiRepository by lazy {
-        AqiRepository()
+        AqiRepository(requireContext())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -26,6 +26,7 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // TODO 9.3 (S) Napsat callback na Favorite Click
         val adapter = AqiAdapter(onItemClick = {
             findNavController()
                 .navigate(ListFragmentDirections.actionListFragmentToDetailFragment(it))
