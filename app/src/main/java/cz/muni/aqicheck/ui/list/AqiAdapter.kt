@@ -7,7 +7,8 @@ import cz.muni.aqicheck.data.AqiPresentableListItem
 import cz.muni.aqicheck.databinding.ItemAiqListBinding
 
 class AqiAdapter(
-    private val onItemClick: (AqiPresentableListItem) -> Unit
+    private val onItemClick: (AqiPresentableListItem) -> Unit,
+    private val onFavoriteClick: (AqiPresentableListItem) -> Unit
 ) : RecyclerView.Adapter<AqiViewHolder>() {
 
     private var listItems: MutableList<AqiPresentableListItem> = mutableListOf()
@@ -18,7 +19,7 @@ class AqiAdapter(
     }
 
     override fun onBindViewHolder(holder: AqiViewHolder, position: Int) {
-        holder.bind(listItems[position], onItemClick)
+        holder.bind(listItems[position], onItemClick, onFavoriteClick)
     }
 
     fun submitList(newListItems: List<AqiPresentableListItem>) {

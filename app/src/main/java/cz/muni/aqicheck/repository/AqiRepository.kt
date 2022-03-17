@@ -4,11 +4,11 @@ import android.content.Context
 import cz.muni.aqicheck.data.AqiPresentableListItem
 import cz.muni.aqicheck.database.AqiDatabase
 import cz.muni.aqicheck.database.FavoriteStationDao
+import cz.muni.aqicheck.database.FavoriteStationEntity
 import cz.muni.aqicheck.util.getNowFormattedDateString
 
 class AqiRepository(
     context: Context,
-    // TODO 7. Vytvoření databáze
     private val favoriteStationDao: FavoriteStationDao = AqiDatabase.create(context).favoriteStationDao(),
 ) {
 
@@ -26,8 +26,31 @@ class AqiRepository(
             }
         }
 
+    fun getFavorites(): List<AqiPresentableListItem> =
+        favoriteStationDao.getAll()
+            .map { entity ->
+                AqiPresentableListItem(
+                    id = entity.id,
+                    aqi = entity.lastKnownAqi,
+                    time = entity.lastSyncTime,
+                    station = entity.station,
+                    isFavorite = true
+                )
+            }
 
-    fun getFavorites() {
-        // TODO 8. napsat získání favorites a mapování na list entity
+    fun updateFavorite(item: AqiPresentableListItem) {
+        val isFavorite = !item.isFavorite
+        if (isFavorite) {
+            val entity = FavoriteStationEntity(
+                id = item.id,
+                lastKnownAqi = item.aqi,
+                lastSyncTime = item.time,
+                station = item.station,
+            )
+
+            favoriteStationDao.saveEntity(entity)
+        } else {
+            favoriteStationDao.deleteById(item.id)
+        }
     }
 }
