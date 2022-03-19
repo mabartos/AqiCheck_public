@@ -13,7 +13,7 @@ class AqiViewHolder(private val binding: ItemAiqListBinding)
     fun bind(
         listItem: AqiPresentableListItem,
         onItemClick: (AqiPresentableListItem) -> Unit,
-        onFavoriteClick: (AqiPresentableListItem) -> Unit
+        onFavoriteClick: (AqiPresentableListItem, Int) -> Unit
     ) {
         val aqiColor = AqiScale.getColor(listItem.aqi)
         binding.aqiColorIndicator.backgroundTintList = ContextCompat.getColorStateList(itemView.context, aqiColor)
@@ -30,7 +30,7 @@ class AqiViewHolder(private val binding: ItemAiqListBinding)
         binding.favoriteImageView.setImageResource(imageRes)
 
         binding.favoriteImageView.setOnClickListener {
-            onFavoriteClick(listItem)
+            onFavoriteClick(listItem, adapterPosition)
         }
     }
 }

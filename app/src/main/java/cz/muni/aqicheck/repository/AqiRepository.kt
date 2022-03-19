@@ -4,14 +4,26 @@ import android.content.Context
 import cz.muni.aqicheck.data.AqiPresentableListItem
 import cz.muni.aqicheck.database.AqiDatabase
 import cz.muni.aqicheck.database.FavoriteStationDao
-import cz.muni.aqicheck.database.FavoriteStationEntity
 import cz.muni.aqicheck.util.getNowFormattedDateString
+import cz.muni.aqicheck.webservice.AqiApi
+import cz.muni.aqicheck.webservice.RetrofitUtil
+import cz.muni.aqicheck.webservice.response.AqiDetailResponse
+import cz.muni.aqicheck.webservice.response.AqiListItem
+import cz.muni.aqicheck.webservice.response.AqiListResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class AqiRepository(
     context: Context,
     private val favoriteStationDao: FavoriteStationDao = AqiDatabase.create(context).favoriteStationDao(),
+    // TODO 4. vytvoření instance
+    private val aqiApi: AqiApi = RetrofitUtil.createAqiWebService()
 ) {
 
+    private val token: String = "ebb5ee840b6a6590cfcc2e354b7c26b135a21cb0"
+
+    // TODO 6.2 lze smazat
     fun getMockedData(count: Int = 10): List<AqiPresentableListItem> =
         mutableListOf<AqiPresentableListItem>().apply {
             repeat(count) {
@@ -26,31 +38,55 @@ class AqiRepository(
             }
         }
 
+    // TODO 4. search metoda
+    fun search(keyword: String, onSuccess: (List<AqiPresentableListItem>) -> Unit, onFailure: (Throwable) -> Unit) {
+        aqiApi.getSearchAqiByName(keyword, token)
+            .enqueue(object : Callback<AqiListResponse> {
+
+                override fun onResponse(call: Call<AqiListResponse>, response: Response<AqiListResponse>) {
+                    val responseBody = response.body()
+                    if (response.isSuccessful && responseBody != null) {
+                        onSuccess(mapAqi(responseBody.data))
+                    } else {
+                        onFailure(IllegalStateException("Response was not successful"))
+                    }
+                }
+
+                override fun onFailure(call: Call<AqiListResponse>, t: Throwable) {
+                    onFailure(t)
+                }
+            })
+    }
+
+    // TODO 6.1 (S) napsání mapovací funkce, která
+    // TODO 6.1 z response napapuje na AqiPresentableListItem
+    // TODO 6.1 signatury Využití toAqiPresentableItem
+    private fun mapAqi(items: List<AqiListItem>): List<AqiPresentableListItem> {
+        TODO()
+    }
+
     fun getFavorites(): List<AqiPresentableListItem> =
         favoriteStationDao.getAll()
             .map { entity ->
-                AqiPresentableListItem(
-                    id = entity.id,
-                    aqi = entity.lastKnownAqi,
-                    time = entity.lastSyncTime,
-                    station = entity.station,
-                    isFavorite = true
-                )
+                // TODO 5. použítí mapper
+                entity.toAqiPresentableItem()
             }
 
     fun updateFavorite(item: AqiPresentableListItem) {
         val isFavorite = !item.isFavorite
         if (isFavorite) {
-            val entity = FavoriteStationEntity(
-                id = item.id,
-                lastKnownAqi = item.aqi,
-                lastSyncTime = item.time,
-                station = item.station,
-            )
-
-            favoriteStationDao.saveEntity(entity)
+            // TODO 5. použítí mapper
+            favoriteStationDao.saveEntity(item.toFavoriteStationEntity())
         } else {
             favoriteStationDao.deleteById(item.id)
         }
+    }
+
+    // TODO 8. (S) -> napsání getStationById
+    // TODO 8. (S) -> getSearchAqiById
+    // TODO 8. (S) -> do DetailFragment se nyní nebude předávat item, ale pouze id
+    // TODO 8. (S) -> a zobrazí se AqiDetailResponse
+    fun getStationById(id: Long, onSuccess: (AqiDetailResponse) -> Unit, onFailure: (Throwable) -> Unit) {
+        TODO()
     }
 }

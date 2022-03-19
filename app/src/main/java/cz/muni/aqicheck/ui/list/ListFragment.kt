@@ -31,14 +31,17 @@ class ListFragment : Fragment() {
                 findNavController()
                     .navigate(ListFragmentDirections.actionListFragmentToDetailFragment(it))
             },
-            onFavoriteClick = { item ->
-                aqiRepository.updateFavorite(item)
-            }
         )
+        // TODO 1.3 update item v listu
+        adapter.onFavoriteClick = { item, position ->
+            aqiRepository.updateFavorite(item)
+            adapter.updateFavorite(position, !item.isFavorite)
+        }
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
+        // TODO 7. změna source -> czech pro default
         adapter.submitList(aqiRepository.getMockedData(100))
     }
 }
