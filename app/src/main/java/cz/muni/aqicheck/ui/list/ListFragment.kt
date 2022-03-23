@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cz.muni.aqicheck.databinding.FragmentListBinding
 import cz.muni.aqicheck.repository.AqiRepository
+import cz.muni.aqicheck.util.toast
 
 class ListFragment : Fragment() {
 
@@ -18,7 +19,11 @@ class ListFragment : Fragment() {
         AqiRepository(requireContext())
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentListBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
@@ -29,7 +34,7 @@ class ListFragment : Fragment() {
         val adapter = AqiAdapter(
             onItemClick = {
                 findNavController()
-                    .navigate(ListFragmentDirections.actionListFragmentToDetailFragment(it))
+                    .navigate(ListFragmentDirections.actionListFragmentToDetailFragment(it.id))
             },
         )
         // TODO 1.3 update item v listu
@@ -42,6 +47,13 @@ class ListFragment : Fragment() {
         binding.recyclerView.adapter = adapter
 
         // TODO 7. změna source -> czech pro default
-        adapter.submitList(aqiRepository.getMockedData(100))
+
+        aqiRepository.search("czech",
+            onSuccess = { items ->
+                adapter.submitList(items)
+            },
+            onFailure = {
+                context?.toast("Cannot find czech")
+            })
     }
 }

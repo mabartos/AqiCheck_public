@@ -9,13 +9,23 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import cz.muni.aqicheck.R
 import cz.muni.aqicheck.databinding.FragmentDetailBinding
+import cz.muni.aqicheck.repository.AqiRepository
 import cz.muni.aqicheck.util.AqiScale
+import cz.muni.aqicheck.util.toast
 
-class DetailFragment: Fragment() {
+class DetailFragment : Fragment() {
+
+    private val aqiRepository: AqiRepository by lazy {
+        AqiRepository(requireContext())
+    }
 
     private lateinit var binding: FragmentDetailBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentDetailBinding.inflate(LayoutInflater.from(context), container, false)
         return binding.root
     }
@@ -28,21 +38,29 @@ class DetailFragment: Fragment() {
             findNavController().navigateUp()
         }
 
-        val aqiDetail = DetailFragmentArgs.fromBundle(requireArguments()).item
+        val aqiDetailId = DetailFragmentArgs.fromBundle(requireArguments()).id
 
-        binding.aqiTextView.text = aqiDetail.aqi
-        binding.timeTextView.text = aqiDetail.time
-        binding.locationTextView.text = aqiDetail.station
+        aqiRepository.getStationById(aqiDetailId,
+            onSuccess = { aqiDetail ->
+                binding.aqiTextView.text = aqiDetail.data.aqi
+                binding.timeTextView.text = aqiDetail.data.time.s
+                binding.locationTextView.text = aqiDetail.data.city.geo.joinToString { ", " }
 
-        val aqiColor = AqiScale.getColor(aqiDetail.aqi)
-        binding.indicator.backgroundTintList = ContextCompat.getColorStateList(requireContext(), aqiColor)
+                val aqiColor = AqiScale.getColor(aqiDetail.data.aqi)
+                binding.indicator.backgroundTintList =
+                    ContextCompat.getColorStateList(requireContext(), aqiColor)
 
-        val name = aqiDetail.station
-        binding.nameTextView.text = name
-        binding.toolbar.title = name
+                val name = aqiDetail.data.city.name
+                binding.nameTextView.text = name
+                binding.toolbar.title = name
 
-        val station = aqiDetail.station
-        binding.stationTextView.text = station
-        binding.webTextView.text = station
+                val station = aqiDetail.data.city.name
+                binding.stationTextView.text = station
+                binding.webTextView.text = station
+            }, onFailure = {
+                context?.toast("Not found")
+            })
+
+
     }
 }

@@ -31,7 +31,7 @@ class FavoritesFragment : Fragment() {
         val adapter = AqiAdapter(
             onItemClick = {
                 findNavController()
-                    .navigate(FavoritesFragmentDirections.actionFavoritesFragmentToDetailFragment(it))
+                    .navigate(FavoritesFragmentDirections.actionFavoritesFragmentToDetailFragment(it.id))
             }
         )
         // TODO 1.2 update item a smazání z listu
